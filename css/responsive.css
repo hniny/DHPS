@@ -1,0 +1,31 @@
+#responsive-font{
+    font-size: 15px;
+}
+#rp-font{
+    font-size: 15px;
+}
+#tr-width{
+    width: 200px;
+}
+.rp-btn{
+    width: 0px;
+}
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    [class*="col-"] {
+      width: 100%;
+    }
+    #responsive-font{
+        font-size: 8px;
+    }
+    #rp-font{
+        font-size: 7px;
+        padding: 0.1rem;
+    }
+    #tr-width{
+        width: 50px;
+    }
+    .rp-btn{
+        width: 20px;
+    }
+  }

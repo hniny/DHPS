@@ -1,0 +1,132 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class {{ class }} extends Controller
+{
+
+    function __construct()
+    {
+         $this->middleware('permission:{{modelVariable}}-list|{{modelVariable}}-create|{{modelVariable}}-edit|{{modelVariable}}-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:{{modelVariable}}-create', ['only' => ['create','store']]);
+         $this->middleware('permission:{{modelVariable}}-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:{{modelVariable}}-delete', ['only' => ['destroy']]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        ${{ modelVariable }} = {{model}}::latest()->paginate(10);
+        return view('{{ modelVariable }}.index',compact('${{ modelVariable }}'))
+            ->with('i', (request()->input('page', 1) - 1) * 5)
+            ->withTitle('{{model}} Listing')
+            ->with('trash',false);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('{{ modelVariable }}.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            //fieldname
+        ]);
+  
+        {{model}}::create($request->all());
+            
+        return redirect()->route('{{ modelVariable }}.index')
+                        ->with('success','{{model}} created successfully.');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Http\Response
+     */
+    public function show({{ model }} ${{ modelVariable }})
+    {
+        return view('{{ modelVariable }}.show',compact('{{ model }}'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Http\Response
+     */
+    public function edit({{ model }} ${{ modelVariable }})
+    {
+        return view('{{ modelVariable }}.edit',compact('{{ modelVariable }}'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, {{ model }} ${{ modelVariable }})
+    {
+         $request->validate([
+           //your code
+        ]);
+        ${{ modelVariable }}->update($request->all());
+        return redirect()->route('{{ modelVariable }}.index')
+                        ->with('success','{{model}} updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy({{ model }} ${{ modelVariable }})
+    {
+        ${{ modelVariable }}->delete();
+  
+        return redirect()->route('{{ modelVariable }}.index')
+                        ->with('success','{{ model }} deleted successfully');
+    }
+
+    public function {{ modelVariable }}Trash()
+    {
+        ${{ modelVariable }} = {{ model }}::onlyTrashed()->paginate(10);
+        return view('{{ modelVariable }}.index',compact('{{ modelVariable }}'))
+            ->with('i', (request()->input('page', 1) - 1) * 5)
+            ->withTitle('{{ model }} Listing')
+            ->with('trash',true);
+    }
+
+    public function {{ modelVariable }}Restore($id)
+    {
+        {{ model }}::where('id', $id)
+                ->restore();
+        
+        return redirect()->route('{{ modelVariable }}.index')
+                         ->with('success','{{ model }} restore successfully');
+    }
+}
