@@ -9,6 +9,7 @@ STEP 1: Check [(https://github.com/hmmorg/dhps/issues/1#issue-656283639)]
         'ADMIN' => 1,
         'CUSTOMER' => 2,
         'TEAM_MEMBER' => 3,
+        'WAREHOUSE_MANAGER' => 4,
     ]
 ```
 ### Mail Config
